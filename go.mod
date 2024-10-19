@@ -1,12 +1,24 @@
 module notification-service
 
-go 1.22.3
+go 1.22.8
 
-require github.com/ilyakaznacheev/cleanenv v1.5.0
+require (
+	github.com/ilyakaznacheev/cleanenv v1.5.0
+	github.com/s21platform/kafka-lib v0.0.4
+	github.com/s21platform/metrics-lib v0.0.6
+	github.com/s21platform/notification-proto v0.0.1
+	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
+)
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
+	github.com/klauspost/compress v1.17.11 // indirect
+	github.com/marpaia/graphite-golang v0.0.0-20190519024811-caf161d2c2b1 // indirect
+	github.com/pierrec/lz4/v4 v4.1.21 // indirect
+	github.com/segmentio/kafka-go v0.4.47 // indirect
+	google.golang.org/protobuf v1.35.1 // indirect
+	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
 )
