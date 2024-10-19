@@ -13,5 +13,7 @@ FROM alpine:latest
 
 WORKDIR /app
 
+COPY templates .
+
 COPY --from=builder /usr/src/service/build/main .
 CMD ["/app/main"]
