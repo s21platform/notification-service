@@ -3,6 +3,7 @@ package invite_mail
 import (
 	"crypto/tls"
 	"fmt"
+	"log"
 
 	"gopkg.in/gomail.v2"
 
@@ -49,6 +50,7 @@ func (s *Service) SendEmail(subject string, to string, content string) error {
 	}
 	//d.SSL = true
 	if err := d.DialAndSend(m); err != nil {
+		log.Printf("failed to send email: %v", err)
 		return err
 	}
 	return nil
