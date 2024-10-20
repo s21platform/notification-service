@@ -44,6 +44,7 @@ func (s *Service) SendEmail(subject string, to string, content string) error {
 	m.SetHeader("Subject", subject)
 	m.SetBody("text/html", content)
 
+	log.Println(s.server, s.port, s.user, s.password)
 	d := gomail.NewDialer(s.server, s.port, s.user, s.password)
 	d.TLSConfig = &tls.Config{
 		InsecureSkipVerify: true,
