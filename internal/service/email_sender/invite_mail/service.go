@@ -29,6 +29,7 @@ func New(cfg *config.Config) *Service {
 }
 
 func (s *Service) SendEmail(subject string, to string, content string) error {
+	log.Println(s.env)
 	if s.env != "prod" {
 		whiteList := map[string]struct{}{
 			"garroshm@student.21-school.ru": {},
@@ -44,7 +45,7 @@ func (s *Service) SendEmail(subject string, to string, content string) error {
 	m.SetHeader("Subject", subject)
 	m.SetBody("text/html", content)
 
-	log.Println(s.server, s.port, s.user, s.password)
+	log.Printf("try send: from %s, to %s", s.user, to)
 	d := gomail.NewDialer(s.server, s.port, s.user, s.password)
 	d.TLSConfig = &tls.Config{
 		InsecureSkipVerify: true,
