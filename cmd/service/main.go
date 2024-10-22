@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"notification-service/internal/client/user"
 
@@ -26,7 +25,7 @@ func main() {
 	//	log.Fatal(fmt.Errorf("db.New: %w", err))
 	//}
 	//defer dbRepo.Close()
-	fmt.Println(cfg.EmailVerification.Server, cfg.EmailVerification.Port, cfg.EmailVerification.User, cfg.EmailVerification.Password)
+
 	metrics, err := pkg.NewMetrics(cfg.Metrics.Host, cfg.Metrics.Port, "notification", cfg.Platform.Env)
 	if err != nil {
 		log.Fatalf("faild to connect graphite: %v", err)
@@ -47,5 +46,6 @@ func main() {
 
 	newFriendsConsumer.RegisterHandler(ctx, inviteMailHandler.Handle)
 
+	log.Println("starting server")
 	<-ctx.Done()
 }

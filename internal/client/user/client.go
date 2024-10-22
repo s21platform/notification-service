@@ -3,11 +3,14 @@ package user
 import (
 	"context"
 	"fmt"
-	userproto "github.com/s21platform/user-proto/user-proto"
+	"log"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
-	"log"
+
+	userproto "github.com/s21platform/user-proto/user-proto"
+
 	"notification-service/internal/config"
 )
 
@@ -27,6 +30,7 @@ func New(cfg *config.Config) *Client {
 
 func (c *Client) GetLoginByUuid(ctx context.Context, uuid string) (string, error) {
 	ctx = metadata.NewOutgoingContext(ctx, metadata.Pairs("uuid", uuid))
+	log.Println("success create metadata")
 	resp, err := c.client.GetLoginByUUID(ctx, &userproto.GetLoginByUUIDIn{Uuid: uuid})
 	if err != nil {
 		return "", fmt.Errorf("failed to get login by uuid %s: %v", uuid, err)
