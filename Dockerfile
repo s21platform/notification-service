@@ -1,4 +1,4 @@
-FROM golang:1.22.3-alpine AS builder
+FROM golang:1.22-alpine AS builder
 
 WORKDIR /usr/src/service
 COPY go.mod .
@@ -12,6 +12,8 @@ RUN go build -o build/main cmd/service/main.go
 FROM alpine:latest
 
 WORKDIR /app
+
+COPY templates ./templates
 
 COPY --from=builder /usr/src/service/build/main .
 CMD ["/app/main"]
