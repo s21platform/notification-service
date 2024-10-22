@@ -1,4 +1,4 @@
-package user_invite
+package invite_on_platform
 
 import (
 	"bytes"
@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"html/template"
 	"log"
+	"strings"
 
 	"notification-service/internal/config"
 
@@ -14,15 +15,17 @@ import (
 )
 
 type Email struct {
-	From string
+	User      string
+	NewMember string
 }
 
 type Handler struct {
 	imC InviteMailClient
+	uC  UserClient
 }
 
-func New(imC InviteMailClient) *Handler {
-	return &Handler{imC: imC}
+func New(imC InviteMailClient, uC UserClient) *Handler {
+	return &Handler{imC: imC, uC: uC}
 }
 
 func convertMessage(bMessage []byte, target interface{}) error {
@@ -44,13 +47,20 @@ func (h *Handler) Handle(ctx context.Context, in []byte) {
 		return
 	}
 
-	tmpl, err := template.ParseFiles("templates/welcome.html")
+	tmpl, err := template.ParseFiles("templates/invite_on_platform.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("prepare tmpl")
+
+	login, err := h.uC.GetLoginByUuid(ctx, msg.Uuid)
+	if err != nil {
+		m.Increment("new_friend.error")
+		log.Printf("failed to get login: %v", err)
+		return
+	}
 	data := Email{
-		From: "garroshm",
+		NewMember: strings.Split(msg.Email, "@")[0],
+		User:      login,
 	}
 
 	var tmp bytes.Buffer
@@ -59,7 +69,7 @@ func (h *Handler) Handle(ctx context.Context, in []byte) {
 		log.Fatal(err)
 	}
 
-	err = h.imC.SendEmail("Приглашение на Space 21", msg.Email, msg.String())
+	err = h.imC.SendEmail("Приглашение на Space 21", msg.Email, tmp.String())
 	if err != nil {
 		m.Increment("new_friend.error")
 		log.Printf("failed to send email: %v", err)

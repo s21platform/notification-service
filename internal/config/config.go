@@ -13,6 +13,7 @@ const KeyMetrics = key("metrics")
 type Config struct {
 	Service           Service
 	Postgres          Postgres
+	User              User
 	EmailVerification EmailVerification
 	Kafka             Kafka
 	Platform          Platform
@@ -29,6 +30,11 @@ type Postgres struct {
 	Database string `env:"NOTIFICATION_SERVICE_POSTGRES_DB"`
 	Host     string `env:"NOTIFICATION_SERVICE_POSTGRES_HOST"`
 	Port     string `env:"NOTIFICATION_SERVICE_POSTGRES_PORT"`
+}
+
+type User struct {
+	Host string `env:"USER_SERVICE_HOST"`
+	Port string `env:"USER_SERVICE_PORT"`
 }
 
 type EmailVerification struct {
