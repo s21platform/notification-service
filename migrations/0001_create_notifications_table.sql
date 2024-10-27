@@ -4,9 +4,9 @@ CREATE TABLE IF NOT EXISTS push_notifications (
     id SERIAL PRIMARY KEY,
     user_id UUID,
     notification TEXT,
-    readed BOOLEAN,
+    is_read BOOLEAN,
     created_time TIMESTAMP,
-    readed_time TIMESTAMP
+    read_time TIMESTAMP
 );
 
 -- +goose Down

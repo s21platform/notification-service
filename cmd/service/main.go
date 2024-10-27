@@ -1,51 +1,42 @@
 package main
 
 import (
-	"context"
+	"fmt"
 	"log"
-	"notification-service/internal/client/user"
+	"net"
+
+	"google.golang.org/grpc"
+
+	notificationproto "github.com/s21platform/notification-proto/notification-proto"
 
 	"notification-service/internal/config"
-	"notification-service/internal/databus/invite_on_platform"
-	"notification-service/internal/service/email_sender/invite_mail"
-
-	kafkalib "github.com/s21platform/kafka-lib"
-	"github.com/s21platform/metrics-lib/pkg"
+	"notification-service/internal/infra"
+	"notification-service/internal/repository/postgres"
+	"notification-service/internal/rpc"
 )
-
-type Email struct {
-	Name string
-	Code string
-}
 
 func main() {
 	cfg := config.MustLoad()
-	//dbRepo, err := postgres.New(cfg)
-	//if err != nil {
-	//	log.Fatal(fmt.Errorf("db.New: %w", err))
-	//}
-	//defer dbRepo.Close()
+	dbRepo := postgres.New(cfg)
+	defer dbRepo.Close()
 
-	metrics, err := pkg.NewMetrics(cfg.Metrics.Host, cfg.Metrics.Port, "notification", cfg.Platform.Env)
+	server := rpc.New(dbRepo)
+
+	s := grpc.NewServer(
+		grpc.ChainUnaryInterceptor(
+			infra.AuthInterceptor,
+		),
+	)
+
+	notificationproto.RegisterNotificationServiceServer(s, server)
+
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.Service.Port))
 	if err != nil {
-		log.Fatalf("faild to connect graphite: %v", err)
+		log.Printf("Cannot listen port: %s; Error: %s", cfg.Service.Port, err)
 	}
 
-	ctx := context.WithValue(context.Background(), config.KeyMetrics, metrics)
-
-	userClient := user.New(cfg)
-
-	newFriendsConsumer, err := kafkalib.NewConsumer(cfg.Kafka.Server, cfg.Kafka.NotificationNewFriendTopic, metrics)
-	if err != nil {
-		log.Fatalf("failed to create consumer: %v", err)
+	fmt.Println("Service started")
+	if err = s.Serve(lis); err != nil {
+		log.Printf("Cannot start service: %s; Error: %s", cfg.Service.Port, err)
 	}
-
-	inviteMail := invite_mail.New(cfg)
-
-	inviteMailHandler := invite_on_platform.New(inviteMail, userClient)
-
-	newFriendsConsumer.RegisterHandler(ctx, inviteMailHandler.Handle)
-
-	log.Println("starting server")
-	<-ctx.Done()
 }
