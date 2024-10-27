@@ -57,7 +57,7 @@ func (r *Repository) GetNotifications(ctx context.Context, userUuid string, limi
 	query, args, err := sq.Select(`id`, `notification`, `is_read`).
 		From(`push_notifications`).
 		Where(sq.Eq{"user_id": userUuid}).
-		OrderBy(`created_at DESC`).
+		OrderBy(`created_time DESC`).
 		Limit(uint64(limit)).
 		Offset(uint64(offset)).
 		PlaceholderFormat(sq.Dollar).
