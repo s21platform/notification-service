@@ -33,7 +33,7 @@ func New(cfg *config.Config) *Repository {
 
 func (r *Repository) GetCountNotification(ctx context.Context, userUuid string) (int64, error) {
 	query, args, err := sq.Select(`COUNT(id)`).
-		From("push_notification").
+		From("push_notifications").
 		Where(sq.And{
 			sq.Eq{"user_id": userUuid},
 			sq.Eq{"is_read": false},
