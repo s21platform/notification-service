@@ -1,6 +1,6 @@
 -- +goose Up
 
-CREATE TABLE IF NOT EXISTS notifications (
+CREATE TABLE IF NOT EXISTS push_notifications (
     id SERIAL PRIMARY KEY,
     user_id UUID,
     notification TEXT,
@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS notifications (
 );
 
 -- +goose Down
-DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS push_notifications;
