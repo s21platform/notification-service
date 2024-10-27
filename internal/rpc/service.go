@@ -30,3 +30,22 @@ func (s *Service) GetNotificationCount(ctx context.Context, _ *notificationproto
 		Count: count,
 	}, nil
 }
+
+func (s *Service) GetNotification(ctx context.Context, in *notificationproto.NotificationIn) (*notificationproto.NotificationOut, error) {
+	userUuid := ctx.Value(config.KeyUUID).(string)
+	notifications, err := s.dbR.GetNotifications(ctx, userUuid, in.Limit, in.Offset)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Intenal Error: %v", err.Error())
+	}
+	var result []*notificationproto.Notification
+	for _, notification := range notifications {
+		result = append(result, &notificationproto.Notification{
+			Id:     notification.Id,
+			Text:   notification.Text,
+			IsRead: notification.IsRead,
+		})
+	}
+	return &notificationproto.NotificationOut{
+		Notifications: result,
+	}, nil
+}

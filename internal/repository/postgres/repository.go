@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"notification-service/internal/model"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
@@ -50,4 +51,26 @@ func (r *Repository) GetCountNotification(ctx context.Context, userUuid string) 
 		return 0, fmt.Errorf("failed to execute query: %v", err)
 	}
 	return int64(count), nil
+}
+
+func (r *Repository) GetNotifications(ctx context.Context, userUuid string, limit int64, offset int64) ([]model.Notification, error) {
+	query, args, err := sq.Select(`id`, `notification`, `is_read`).
+		From(`push_notifications`).
+		Where(sq.Eq{"user_id": userUuid}).
+		OrderBy(`created_at DESC`).
+		Limit(uint64(limit)).
+		Offset(uint64(offset)).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to build query: %v", err)
+	}
+
+	var notifications []model.Notification
+	err = r.connection.Select(&notifications, query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %v", err)
+	}
+	return notifications, nil
 }
