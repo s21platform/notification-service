@@ -7,7 +7,7 @@ import (
 
 	"gopkg.in/gomail.v2"
 
-	"notification-service/internal/config"
+	"github.com/s21platform/notification-service/internal/config"
 )
 
 type Service struct {

@@ -2,7 +2,8 @@ package infra
 
 import (
 	"context"
-	"notification-service/internal/config"
+
+	"github.com/s21platform/notification-service/internal/config"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

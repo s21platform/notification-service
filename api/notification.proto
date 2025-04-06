@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+option go_package = "pkg/notification";
+
+service NotificationService {
+  // Метод получения количества непрочитанных уведомлений
+  rpc GetNotificationCount (Empty) returns (NotificationCountOut) {}
+  // Метод получения уведомлений по limit и offset
+  rpc GetNotification (NotificationIn) returns (NotificationOut) {}
+  // Метод отметки уведомления как прочитанного
+  rpc MarkNotificationAsRead (MarkNotificationAsReadIn) returns (Empty) {}
+}
+
+// Пустое сообщение
+message Empty {}
+
+// Выходное сообщение для метода GetNotificationCount
+message NotificationCountOut {
+  // Количество непрочитанных сообщений
+  int64 count = 1;
+}
+
+// Входное сообщение для получения уведомлений
+message NotificationIn {
+  // Лимит для уведомлений
+  int64 limit = 1;
+  // Офсет для уведомлений
+  int64 offset = 2;
+}
+
+// Сущность Уведомление
+message Notification {
+  // ID уведомления
+  int64 id = 1;
+  // Тест уведомления
+  string text = 2;
+  // состояние уведомления (прочитано или нет)
+  bool isRead = 3;
+}
+
+// ответсное сообщение на запрос уведомлений пользователя
+message NotificationOut {
+  // Список сущностей Уведомление
+  repeated Notification notifications = 1;
+}
+
+// Входное сообщение для отметки уведомления как прочитанного
+message MarkNotificationAsReadIn {
+  // ID уведомления
+  int64 notification_id = 1;
+}
+
+// == kafka Event ==
+
+// Сообщение для отправки приглашения на платформу
+message NewUserInvite {
+  // Email нового пользователя
+  string email = 1;
+  // UUID нового пользователя
+  string uuid = 2;
+}

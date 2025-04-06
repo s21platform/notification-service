@@ -4,13 +4,13 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"notification-service/internal/model"
+
+	"github.com/s21platform/notification-service/internal/config"
+	"github.com/s21platform/notification-service/internal/model"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-
-	"notification-service/internal/config"
 )
 
 type Repository struct {
@@ -73,4 +73,35 @@ func (r *Repository) GetNotifications(ctx context.Context, userUuid string, limi
 		return nil, fmt.Errorf("failed to execute query: %v", err)
 	}
 	return notifications, nil
+}
+
+func (r *Repository) MarkNotificationAsRead(ctx context.Context, userUuid string, notificationId int64) error {
+	query, args, err := sq.Update("push_notifications").
+		Set("is_read", true).
+		Where(sq.And{
+			sq.Eq{"user_id": userUuid},
+			sq.Eq{"id": notificationId},
+		}).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+
+	if err != nil {
+		return fmt.Errorf("failed to build query: %v", err)
+	}
+
+	result, err := r.connection.ExecContext(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("failed to execute query: %v", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %v", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("notification not found or already read")
+	}
+
+	return nil
 }

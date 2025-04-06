@@ -7,10 +7,10 @@ import (
 	kafkalib "github.com/s21platform/kafka-lib"
 	"github.com/s21platform/metrics-lib/pkg"
 
-	"notification-service/internal/client/user"
-	"notification-service/internal/config"
-	"notification-service/internal/databus/invite_on_platform"
-	"notification-service/internal/service/email_sender/invite_mail"
+	"github.com/s21platform/notification-service/internal/client/user"
+	"github.com/s21platform/notification-service/internal/config"
+	"github.com/s21platform/notification-service/internal/databus/invite_on_platform"
+	"github.com/s21platform/notification-service/internal/pkg/email_sender/invite_mail"
 )
 
 func main() {

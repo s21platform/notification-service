@@ -9,9 +9,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
 
+	"github.com/s21platform/notification-service/internal/config"
 	userproto "github.com/s21platform/user-proto/user-proto"
-
-	"notification-service/internal/config"
 )
 
 type Client struct {

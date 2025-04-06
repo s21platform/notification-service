@@ -8,7 +8,7 @@ import (
 	"log"
 	"strings"
 
-	"notification-service/internal/config"
+	"github.com/s21platform/notification-service/internal/config"
 
 	"github.com/s21platform/metrics-lib/pkg"
 	"github.com/s21platform/notification-proto/notification-proto/new_user_invite"
