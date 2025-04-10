@@ -2,17 +2,16 @@ syntax = "proto3";
 
 option go_package = "pkg/notification";
 
+import  "google/protobuf/empty.proto";
+
 service NotificationService {
   // Метод получения количества непрочитанных уведомлений
-  rpc GetNotificationCount (Empty) returns (NotificationCountOut) {}
+  rpc GetNotificationCount (google.protobuf.Empty) returns (NotificationCountOut) {}
   // Метод получения уведомлений по limit и offset
   rpc GetNotification (NotificationIn) returns (NotificationOut) {}
   // Метод отметки уведомления как прочитанного
-  rpc MarkNotificationAsRead (MarkNotificationAsReadIn) returns (Empty) {}
+  rpc MarkNotificationAsRead (MarkNotificationAsReadIn) returns (google.protobuf.Empty) {}
 }
-
-// Пустое сообщение
-message Empty {}
 
 // Выходное сообщение для метода GetNotificationCount
 message NotificationCountOut {

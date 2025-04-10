@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -29,11 +30,11 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NotificationServiceClient interface {
 	// Метод получения количества непрочитанных уведомлений
-	GetNotificationCount(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NotificationCountOut, error)
+	GetNotificationCount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*NotificationCountOut, error)
 	// Метод получения уведомлений по limit и offset
 	GetNotification(ctx context.Context, in *NotificationIn, opts ...grpc.CallOption) (*NotificationOut, error)
 	// Метод отметки уведомления как прочитанного
-	MarkNotificationAsRead(ctx context.Context, in *MarkNotificationAsReadIn, opts ...grpc.CallOption) (*Empty, error)
+	MarkNotificationAsRead(ctx context.Context, in *MarkNotificationAsReadIn, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type notificationServiceClient struct {
@@ -44,7 +45,7 @@ func NewNotificationServiceClient(cc grpc.ClientConnInterface) NotificationServi
 	return &notificationServiceClient{cc}
 }
 
-func (c *notificationServiceClient) GetNotificationCount(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NotificationCountOut, error) {
+func (c *notificationServiceClient) GetNotificationCount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*NotificationCountOut, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(NotificationCountOut)
 	err := c.cc.Invoke(ctx, NotificationService_GetNotificationCount_FullMethodName, in, out, cOpts...)
@@ -64,9 +65,9 @@ func (c *notificationServiceClient) GetNotification(ctx context.Context, in *Not
 	return out, nil
 }
 
-func (c *notificationServiceClient) MarkNotificationAsRead(ctx context.Context, in *MarkNotificationAsReadIn, opts ...grpc.CallOption) (*Empty, error) {
+func (c *notificationServiceClient) MarkNotificationAsRead(ctx context.Context, in *MarkNotificationAsReadIn, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Empty)
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, NotificationService_MarkNotificationAsRead_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -79,11 +80,11 @@ func (c *notificationServiceClient) MarkNotificationAsRead(ctx context.Context, 
 // for forward compatibility.
 type NotificationServiceServer interface {
 	// Метод получения количества непрочитанных уведомлений
-	GetNotificationCount(context.Context, *Empty) (*NotificationCountOut, error)
+	GetNotificationCount(context.Context, *emptypb.Empty) (*NotificationCountOut, error)
 	// Метод получения уведомлений по limit и offset
 	GetNotification(context.Context, *NotificationIn) (*NotificationOut, error)
 	// Метод отметки уведомления как прочитанного
-	MarkNotificationAsRead(context.Context, *MarkNotificationAsReadIn) (*Empty, error)
+	MarkNotificationAsRead(context.Context, *MarkNotificationAsReadIn) (*emptypb.Empty, error)
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -94,13 +95,13 @@ type NotificationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedNotificationServiceServer struct{}
 
-func (UnimplementedNotificationServiceServer) GetNotificationCount(context.Context, *Empty) (*NotificationCountOut, error) {
+func (UnimplementedNotificationServiceServer) GetNotificationCount(context.Context, *emptypb.Empty) (*NotificationCountOut, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNotificationCount not implemented")
 }
 func (UnimplementedNotificationServiceServer) GetNotification(context.Context, *NotificationIn) (*NotificationOut, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNotification not implemented")
 }
-func (UnimplementedNotificationServiceServer) MarkNotificationAsRead(context.Context, *MarkNotificationAsReadIn) (*Empty, error) {
+func (UnimplementedNotificationServiceServer) MarkNotificationAsRead(context.Context, *MarkNotificationAsReadIn) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MarkNotificationAsRead not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}
@@ -125,7 +126,7 @@ func RegisterNotificationServiceServer(s grpc.ServiceRegistrar, srv Notification
 }
 
 func _NotificationService_GetNotificationCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -137,7 +138,7 @@ func _NotificationService_GetNotificationCount_Handler(srv interface{}, ctx cont
 		FullMethod: NotificationService_GetNotificationCount_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NotificationServiceServer).GetNotificationCount(ctx, req.(*Empty))
+		return srv.(NotificationServiceServer).GetNotificationCount(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

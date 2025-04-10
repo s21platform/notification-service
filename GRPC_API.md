@@ -4,7 +4,6 @@
 ## Table of Contents
 
 - [api/notification.proto](#api_notification-proto)
-    - [Empty](#-Empty)
     - [MarkNotificationAsReadIn](#-MarkNotificationAsReadIn)
     - [NewUserInvite](#-NewUserInvite)
     - [Notification](#-Notification)
@@ -22,16 +21,6 @@
 <p align="right"><a href="#top">Top</a></p>
 
 ## api/notification.proto
-
-
-
-<a name="-Empty"></a>
-
-### Empty
-Пустое сообщение
-
-
-
 
 
 
@@ -142,9 +131,9 @@
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| GetNotificationCount | [.Empty](#Empty) | [.NotificationCountOut](#NotificationCountOut) | Метод получения количества непрочитанных уведомлений |
+| GetNotificationCount | [.google.protobuf.Empty](#google-protobuf-Empty) | [.NotificationCountOut](#NotificationCountOut) | Метод получения количества непрочитанных уведомлений |
 | GetNotification | [.NotificationIn](#NotificationIn) | [.NotificationOut](#NotificationOut) | Метод получения уведомлений по limit и offset |
-| MarkNotificationAsRead | [.MarkNotificationAsReadIn](#MarkNotificationAsReadIn) | [.Empty](#Empty) | Метод отметки уведомления как прочитанного |
+| MarkNotificationAsRead | [.MarkNotificationAsReadIn](#MarkNotificationAsReadIn) | [.google.protobuf.Empty](#google-protobuf-Empty) | Метод отметки уведомления как прочитанного |
 
  
 

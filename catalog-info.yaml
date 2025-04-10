@@ -1,0 +1,123 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: notification
+  description: Сервис уведомлений
+  annotations:
+    github.com/project-slug: s21platform/notification-service
+  tags:
+    - grpc
+    - postgres
+    - kafka
+  links:
+    - url: https://metric.x.space-21.ru/d/ae48gk8u4ndhcf/notification-service?orgId=1
+      title: Grafana
+      icon: dashboard
+spec:
+  type: service
+  lifecycle: production
+  owner: notification-service-team
+  providesApis:
+    - GetNotificationCount-v0
+    - GetNotification-v0
+    - MarkNotificationAsRead-v0
+  consumesApis:
+    - GetLoginByUUID-v0
+    
+
+--- 
+
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: GetNotificationCount-v0
+  description: Получение количества уведомлений
+  annotations:
+    github.com/project-slug: s21platform/notification-service
+  tags:
+    - proto
+spec:
+  type: grpc
+  lifecycle: production
+  owner: notification-service-team
+  definition: |
+    rpc GetNotificationCount (google.protobuf.Empty) returns (NotificationCountOut){};
+    
+    message NotificationCountOut {
+      int64 count = 1;
+    }
+
+---
+
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: GetNotification-v0
+  description: Получение уведомлений
+  annotations:
+    github.com/project-slug: s21platform/notification-service
+  tags:
+    - proto
+spec:
+  type: grpc
+  lifecycle: production
+  owner: notification-service-team
+  definition: |
+    rpc GetNotification (NotificationIn) returns (NotificationOut){};
+
+    message NotificationIn {
+      string user_id = 1;
+    }
+
+    message NotificationOut {
+      repeated Notification notifications = 1;
+    }
+
+    message Notification {
+      int64 id = 1;
+      string text = 2;
+      bool isRead = 3;
+    }
+
+---
+
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: MarkNotificationAsRead-v0
+  description: Отметка уведомления как прочитанного
+  annotations:
+    github.com/project-slug: s21platform/notification-service
+  tags:
+    - proto
+spec:
+  type: grpc
+  lifecycle: production
+  owner: notification-service-team
+  definition: |
+    rpc MarkNotificationAsRead (MarkNotificationAsReadIn) returns (google.protobuf.Empty){};
+    
+    message MarkNotificationAsReadIn {
+      int64 notification_id = 1;
+    }
+
+---
+
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: UserInviteParticipant-v0
+  description: Получение количества уведомлений
+  annotations:
+    github.com/project-slug: s21platform/notification-service
+  tags:
+    - kafka
+spec:
+  type: kafka
+  lifecycle: production
+  owner: notification-service-team
+  definition: |
+    message NewUserInvite {
+      string email = 1;
+      string uuid = 2;
+    }

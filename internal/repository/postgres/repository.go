@@ -54,10 +54,10 @@ func (r *Repository) GetCountNotification(ctx context.Context, userUuid string) 
 }
 
 func (r *Repository) GetNotifications(ctx context.Context, userUuid string, limit int64, offset int64) ([]model.Notification, error) {
-	query, args, err := sq.Select(`id`, `notification`, `is_read`).
+	query, args, err := sq.Select(`id`, `notification`, `is_read`, `read_at`, `created_at`).
 		From(`push_notifications`).
 		Where(sq.Eq{"user_id": userUuid}).
-		OrderBy(`created_time DESC`).
+		OrderBy(`is_read ASC`, `created_at DESC`).
 		Limit(uint64(limit)).
 		Offset(uint64(offset)).
 		PlaceholderFormat(sq.Dollar).
@@ -78,9 +78,11 @@ func (r *Repository) GetNotifications(ctx context.Context, userUuid string, limi
 func (r *Repository) MarkNotificationAsRead(ctx context.Context, userUuid string, notificationId int64) error {
 	query, args, err := sq.Update("push_notifications").
 		Set("is_read", true).
+		Set("read_at", sq.Expr("NOW()")).
 		Where(sq.And{
 			sq.Eq{"user_id": userUuid},
 			sq.Eq{"id": notificationId},
+			sq.Eq{"is_read": false},
 		}).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
