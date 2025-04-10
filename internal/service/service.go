@@ -6,6 +6,7 @@ import (
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"github.com/s21platform/notification-service/pkg/notification"
 
@@ -21,7 +22,7 @@ func New(dbR DbRepo) *Service {
 	return &Service{dbR: dbR}
 }
 
-func (s *Service) GetNotificationCount(ctx context.Context, _ *notification.Empty) (*notification.NotificationCountOut, error) {
+func (s *Service) GetNotificationCount(ctx context.Context, _ *emptypb.Empty) (*notification.NotificationCountOut, error) {
 	log.Println("GetNotificationCount")
 	userUuid := ctx.Value(config.KeyUUID).(string)
 	count, err := s.dbR.GetCountNotification(ctx, userUuid)
@@ -53,7 +54,7 @@ func (s *Service) GetNotification(ctx context.Context, in *notification.Notifica
 	}, nil
 }
 
-func (s *Service) MarkNotificationAsRead(ctx context.Context, in *notification.MarkNotificationAsReadIn) (*notification.Empty, error) {
+func (s *Service) MarkNotificationAsRead(ctx context.Context, in *notification.MarkNotificationAsReadIn) (*emptypb.Empty, error) {
 	log.Println("MarkNotificationAsRead")
 	userUuid := ctx.Value(config.KeyUUID).(string)
 	err := s.dbR.MarkNotificationAsRead(ctx, userUuid, in.NotificationId)
@@ -63,5 +64,5 @@ func (s *Service) MarkNotificationAsRead(ctx context.Context, in *notification.M
 		}
 		return nil, status.Errorf(codes.Internal, "Internal Error: %v", err.Error())
 	}
-	return &notification.Empty{}, nil
+	return &emptypb.Empty{}, nil
 }
