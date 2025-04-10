@@ -8,7 +8,7 @@ on:
 
 
 jobs:
-  build_and_push:
+  build_and_push_migrations:
     name: Build and Push Image to YC
     runs-on: ubuntu-latest
     steps:
@@ -22,9 +22,9 @@ jobs:
         run: |
           docker build -t ${{ secrets.CR_REGISTRY }}/${{ secrets.CR_NAME }}-migrate:develop ./migrations
           docker push ${{ secrets.CR_REGISTRY }}/${{ secrets.CR_NAME }}-migrate:develop
-  deploy:
+  deploy_migrations:
     runs-on: ubuntu-latest
-    needs: build_and_push
+    needs: build_and_push_migrations
     steps:
       - name: executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
