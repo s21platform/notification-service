@@ -17,10 +17,10 @@ import (
 
 func main() {
 	cfg := config.MustLoad()
-	dbRepo := postgres.New(cfg)
-	defer dbRepo.Close()
+	db := postgres.New(cfg)
+	defer db.Close()
 
-	server := service.New(dbRepo)
+	server := service.New(db)
 
 	s := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(

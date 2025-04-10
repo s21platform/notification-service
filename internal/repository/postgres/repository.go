@@ -17,6 +17,12 @@ type Repository struct {
 	connection *sqlx.DB
 }
 
+func NewRepository(db *sqlx.DB) *Repository {
+	return &Repository{
+		connection: db,
+	}
+}
+
 func (r *Repository) Close() {
 	r.connection.Close()
 }

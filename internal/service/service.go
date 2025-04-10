@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"log"
 
 	"google.golang.org/grpc/codes"
@@ -13,13 +15,17 @@ import (
 	"github.com/s21platform/notification-service/internal/config"
 )
 
+var ErrNotificationNotFound = errors.New("notification not found or already read")
+
 type Service struct {
 	notification.UnimplementedNotificationServiceServer
 	dbR DbRepo
 }
 
-func New(dbR DbRepo) *Service {
-	return &Service{dbR: dbR}
+func New(repo DbRepo) *Service {
+	return &Service{
+		dbR: repo,
+	}
 }
 
 func (s *Service) GetNotificationCount(ctx context.Context, _ *emptypb.Empty) (*notification.NotificationCountOut, error) {
@@ -39,7 +45,7 @@ func (s *Service) GetNotification(ctx context.Context, in *notification.Notifica
 	userUuid := ctx.Value(config.KeyUUID).(string)
 	notifications, err := s.dbR.GetNotifications(ctx, userUuid, in.Limit, in.Offset)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "Intenal Error: %v", err.Error())
+		return nil, status.Error(codes.Internal, fmt.Sprintf("Internal Error: %v", err))
 	}
 	var result []*notification.Notification
 	for _, ntf := range notifications {
@@ -60,9 +66,9 @@ func (s *Service) MarkNotificationAsRead(ctx context.Context, in *notification.M
 	err := s.dbR.MarkNotificationAsRead(ctx, userUuid, in.NotificationId)
 	if err != nil {
 		if err.Error() == "notification not found or already read" {
-			return nil, status.Errorf(codes.NotFound, err.Error())
+			return nil, status.Error(codes.NotFound, err.Error())
 		}
-		return nil, status.Errorf(codes.Internal, "Internal Error: %v", err.Error())
+		return nil, status.Error(codes.Internal, fmt.Sprintf("Internal Error: %v", err))
 	}
 	return &emptypb.Empty{}, nil
 }
