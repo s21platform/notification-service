@@ -52,7 +52,7 @@ func (r *Repository) GetCountNotification(ctx context.Context, userUuid string) 
 		return 0, fmt.Errorf("failed to build query: %v", err)
 	}
 	var count int
-	err = r.connection.Get(&count, query, args...)
+	err = r.connection.GetContext(ctx, &count, query, args...)
 	if err != nil {
 		return 0, fmt.Errorf("failed to execute query: %v", err)
 	}
@@ -74,20 +74,20 @@ func (r *Repository) GetNotifications(ctx context.Context, userUuid string, limi
 	}
 
 	var notifications []model.Notification
-	err = r.connection.Select(&notifications, query, args...)
+	err = r.connection.SelectContext(ctx, &notifications, query, args...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute query: %v", err)
 	}
 	return notifications, nil
 }
 
-func (r *Repository) MarkNotificationAsRead(ctx context.Context, userUuid string, notificationId int64) error {
+func (r *Repository) MarkNotificationsAsRead(ctx context.Context, userUuid string, notificationIds []int64) error {
 	query, args, err := sq.Update("push_notifications").
 		Set("is_read", true).
 		Set("read_at", sq.Expr("NOW()")).
 		Where(sq.And{
 			sq.Eq{"user_id": userUuid},
-			sq.Eq{"id": notificationId},
+			sq.Eq{"id": notificationIds},
 			sq.Eq{"is_read": false},
 		}).
 		PlaceholderFormat(sq.Dollar).
@@ -97,18 +97,9 @@ func (r *Repository) MarkNotificationAsRead(ctx context.Context, userUuid string
 		return fmt.Errorf("failed to build query: %v", err)
 	}
 
-	result, err := r.connection.ExecContext(ctx, query, args...)
+	_, err = r.connection.ExecContext(ctx, query, args...)
 	if err != nil {
 		return fmt.Errorf("failed to execute query: %v", err)
-	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return fmt.Errorf("failed to get rows affected: %v", err)
-	}
-
-	if rowsAffected == 0 {
-		return fmt.Errorf("notification not found or already read")
 	}
 
 	return nil

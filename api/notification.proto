@@ -10,7 +10,7 @@ service NotificationService {
   // Метод получения уведомлений по limit и offset
   rpc GetNotification (NotificationIn) returns (NotificationOut) {}
   // Метод отметки уведомления как прочитанного
-  rpc MarkNotificationAsRead (MarkNotificationAsReadIn) returns (google.protobuf.Empty) {}
+  rpc MarkNotificationsAsRead (MarkNotificationsAsReadIn) returns (google.protobuf.Empty) {}
 }
 
 // Выходное сообщение для метода GetNotificationCount
@@ -44,9 +44,9 @@ message NotificationOut {
 }
 
 // Входное сообщение для отметки уведомления как прочитанного
-message MarkNotificationAsReadIn {
-  // ID уведомления
-  int64 notification_id = 1;
+message MarkNotificationsAsReadIn {
+  // ID уведомлений
+  repeated int64 notification_ids = 1;
 }
 
 // == kafka Event ==

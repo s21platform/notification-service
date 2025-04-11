@@ -10,5 +10,5 @@ import (
 type DbRepo interface {
 	GetCountNotification(ctx context.Context, userUuid string) (int64, error)
 	GetNotifications(ctx context.Context, userUuid string, limit int64, offset int64) ([]model.Notification, error)
-	MarkNotificationAsRead(ctx context.Context, userUuid string, notificationId int64) error
+	MarkNotificationsAsRead(ctx context.Context, userUuid string, notificationId []int64) error
 }

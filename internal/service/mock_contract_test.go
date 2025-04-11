@@ -65,16 +65,16 @@ func (mr *MockDbRepoMockRecorder) GetNotifications(ctx, userUuid, limit, offset 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNotifications", reflect.TypeOf((*MockDbRepo)(nil).GetNotifications), ctx, userUuid, limit, offset)
 }
 
-// MarkNotificationAsRead mocks base method.
-func (m *MockDbRepo) MarkNotificationAsRead(ctx context.Context, userUuid string, notificationId int64) error {
+// MarkNotificationsAsRead mocks base method.
+func (m *MockDbRepo) MarkNotificationsAsRead(ctx context.Context, userUuid string, notificationId []int64) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MarkNotificationAsRead", ctx, userUuid, notificationId)
+	ret := m.ctrl.Call(m, "MarkNotificationsAsRead", ctx, userUuid, notificationId)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// MarkNotificationAsRead indicates an expected call of MarkNotificationAsRead.
-func (mr *MockDbRepoMockRecorder) MarkNotificationAsRead(ctx, userUuid, notificationId interface{}) *gomock.Call {
+// MarkNotificationsAsRead indicates an expected call of MarkNotificationsAsRead.
+func (mr *MockDbRepoMockRecorder) MarkNotificationsAsRead(ctx, userUuid, notificationId interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkNotificationAsRead", reflect.TypeOf((*MockDbRepo)(nil).MarkNotificationAsRead), ctx, userUuid, notificationId)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkNotificationsAsRead", reflect.TypeOf((*MockDbRepo)(nil).MarkNotificationsAsRead), ctx, userUuid, notificationId)
 }

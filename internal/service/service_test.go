@@ -120,30 +120,30 @@ func TestService_MarkNotificationAsRead(t *testing.T) {
 	ctx := context.WithValue(context.Background(), config.KeyUUID, "test-user-uuid")
 
 	t.Run("success", func(t *testing.T) {
-		input := &notification.MarkNotificationAsReadIn{NotificationId: 1}
-		mockRepo.EXPECT().MarkNotificationAsRead(ctx, "test-user-uuid", input.NotificationId).
+		input := &notification.MarkNotificationsAsReadIn{NotificationIds: []int64{1}}
+		mockRepo.EXPECT().MarkNotificationsAsRead(ctx, "test-user-uuid", input.NotificationIds).
 			Return(nil)
 
-		_, err := service.MarkNotificationAsRead(ctx, input)
+		_, err := service.MarkNotificationsAsRead(ctx, input)
 		assert.NoError(t, err)
 	})
 
 	t.Run("notification not found", func(t *testing.T) {
-		input := &notification.MarkNotificationAsReadIn{NotificationId: 999}
-		mockRepo.EXPECT().MarkNotificationAsRead(ctx, "test-user-uuid", input.NotificationId).
+		input := &notification.MarkNotificationsAsReadIn{NotificationIds: []int64{999}}
+		mockRepo.EXPECT().MarkNotificationsAsRead(ctx, "test-user-uuid", input.NotificationIds).
 			Return(ErrNotificationNotFound)
 
-		_, err := service.MarkNotificationAsRead(ctx, input)
+		_, err := service.MarkNotificationsAsRead(ctx, input)
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "notification not found")
 	})
 
 	t.Run("repository error", func(t *testing.T) {
-		input := &notification.MarkNotificationAsReadIn{NotificationId: 1}
-		mockRepo.EXPECT().MarkNotificationAsRead(ctx, "test-user-uuid", input.NotificationId).
+		input := &notification.MarkNotificationsAsReadIn{NotificationIds: []int64{1}}
+		mockRepo.EXPECT().MarkNotificationsAsRead(ctx, "test-user-uuid", input.NotificationIds).
 			Return(assert.AnError)
 
-		_, err := service.MarkNotificationAsRead(ctx, input)
+		_, err := service.MarkNotificationsAsRead(ctx, input)
 		assert.Error(t, err)
 	})
 }
