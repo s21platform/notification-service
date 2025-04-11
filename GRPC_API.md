@@ -4,7 +4,7 @@
 ## Table of Contents
 
 - [api/notification.proto](#api_notification-proto)
-    - [MarkNotificationAsReadIn](#-MarkNotificationAsReadIn)
+    - [MarkNotificationsAsReadIn](#-MarkNotificationsAsReadIn)
     - [NewUserInvite](#-NewUserInvite)
     - [Notification](#-Notification)
     - [NotificationCountOut](#-NotificationCountOut)
@@ -24,15 +24,15 @@
 
 
 
-<a name="-MarkNotificationAsReadIn"></a>
+<a name="-MarkNotificationsAsReadIn"></a>
 
-### MarkNotificationAsReadIn
+### MarkNotificationsAsReadIn
 Входное сообщение для отметки уведомления как прочитанного
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| notification_id | [int64](#int64) |  | ID уведомления |
+| notification_ids | [int64](#int64) | repeated | ID уведомлений |
 
 
 
@@ -133,7 +133,7 @@
 | ----------- | ------------ | ------------- | ------------|
 | GetNotificationCount | [.google.protobuf.Empty](#google-protobuf-Empty) | [.NotificationCountOut](#NotificationCountOut) | Метод получения количества непрочитанных уведомлений |
 | GetNotification | [.NotificationIn](#NotificationIn) | [.NotificationOut](#NotificationOut) | Метод получения уведомлений по limit и offset |
-| MarkNotificationAsRead | [.MarkNotificationAsReadIn](#MarkNotificationAsReadIn) | [.google.protobuf.Empty](#google-protobuf-Empty) | Метод отметки уведомления как прочитанного |
+| MarkNotificationsAsRead | [.MarkNotificationsAsReadIn](#MarkNotificationsAsReadIn) | [.google.protobuf.Empty](#google-protobuf-Empty) | Метод отметки уведомления как прочитанного |
 
  
 
