@@ -17,6 +17,9 @@ func AuthInterceptor(
 	info *grpc.UnaryServerInfo,
 	handler grpc.UnaryHandler,
 ) (interface{}, error) {
+	if info.FullMethod == "/NotificationService/SendVerificationCode" {
+		return handler(ctx, req)
+	}
 	md, ok := metadata.FromIncomingContext(ctx)
 	userIDs := md["uuid"]
 	if !ok || len(userIDs) == 0 {

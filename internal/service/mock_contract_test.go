@@ -78,3 +78,40 @@ func (mr *MockDbRepoMockRecorder) MarkNotificationsAsRead(ctx, userUuid, notific
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkNotificationsAsRead", reflect.TypeOf((*MockDbRepo)(nil).MarkNotificationsAsRead), ctx, userUuid, notificationId)
 }
+
+// MockEmailSender is a mock of EmailSender interface.
+type MockEmailSender struct {
+	ctrl     *gomock.Controller
+	recorder *MockEmailSenderMockRecorder
+}
+
+// MockEmailSenderMockRecorder is the mock recorder for MockEmailSender.
+type MockEmailSenderMockRecorder struct {
+	mock *MockEmailSender
+}
+
+// NewMockEmailSender creates a new mock instance.
+func NewMockEmailSender(ctrl *gomock.Controller) *MockEmailSender {
+	mock := &MockEmailSender{ctrl: ctrl}
+	mock.recorder = &MockEmailSenderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockEmailSender) EXPECT() *MockEmailSenderMockRecorder {
+	return m.recorder
+}
+
+// SendEmail mocks base method.
+func (m *MockEmailSender) SendEmail(subject, to, content string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendEmail", subject, to, content)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SendEmail indicates an expected call of SendEmail.
+func (mr *MockEmailSenderMockRecorder) SendEmail(subject, to, content interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendEmail", reflect.TypeOf((*MockEmailSender)(nil).SendEmail), subject, to, content)
+}

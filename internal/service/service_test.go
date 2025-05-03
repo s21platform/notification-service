@@ -14,12 +14,28 @@ import (
 	"github.com/s21platform/notification-service/pkg/notification"
 )
 
+// Реализуем мок для EmailSender
+type mockEmailSender struct{}
+
+func (m *mockEmailSender) SendEmail(subject string, to string, content string) error {
+	return nil
+}
+
+// Реализуем мок для VerificationCodeSender
+type mockVerificationCodeSender struct{}
+
+func (m *mockVerificationCodeSender) SendVerificationCode(email string, code string) error {
+	return nil
+}
+
 func TestService_GetNotificationCount(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	mockRepo := NewMockDbRepo(ctrl)
-	service := New(mockRepo)
+	mockEmail := &mockEmailSender{}
+	mockVerification := &mockVerificationCodeSender{}
+	service := New(mockRepo, mockEmail, mockVerification)
 	ctx := context.WithValue(context.Background(), config.KeyUUID, "test-user-uuid")
 
 	t.Run("success", func(t *testing.T) {
@@ -47,7 +63,9 @@ func TestService_GetNotification(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockRepo := NewMockDbRepo(ctrl)
-	service := New(mockRepo)
+	mockEmail := &mockEmailSender{}
+	mockVerification := &mockVerificationCodeSender{}
+	service := New(mockRepo, mockEmail, mockVerification)
 	ctx := context.WithValue(context.Background(), config.KeyUUID, "test-user-uuid")
 
 	now := time.Now()
@@ -116,7 +134,9 @@ func TestService_MarkNotificationAsRead(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockRepo := NewMockDbRepo(ctrl)
-	service := New(mockRepo)
+	mockEmail := &mockEmailSender{}
+	mockVerification := &mockVerificationCodeSender{}
+	service := New(mockRepo, mockEmail, mockVerification)
 	ctx := context.WithValue(context.Background(), config.KeyUUID, "test-user-uuid")
 
 	t.Run("success", func(t *testing.T) {
@@ -145,5 +165,52 @@ func TestService_MarkNotificationAsRead(t *testing.T) {
 
 		_, err := service.MarkNotificationsAsRead(ctx, input)
 		assert.Error(t, err)
+	})
+}
+
+func TestService_SendVerificationCode(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockRepo := NewMockDbRepo(ctrl)
+	mockEmail := &mockEmailSender{}
+	mockVerification := &mockVerificationCodeSender{}
+	service := New(mockRepo, mockEmail, mockVerification)
+	ctx := context.Background()
+
+	t.Run("success", func(t *testing.T) {
+		input := &notification.SendVerificationCodeIn{
+			Email: "test@example.com",
+			Code:  "123456",
+		}
+
+		result, err := service.SendVerificationCode(ctx, input)
+
+		assert.NoError(t, err)
+		assert.NotNil(t, result)
+	})
+
+	t.Run("invalid input", func(t *testing.T) {
+		// Проверка с пустым email
+		input1 := &notification.SendVerificationCodeIn{
+			Email: "",
+			Code:  "123456",
+		}
+
+		result1, err1 := service.SendVerificationCode(ctx, input1)
+
+		assert.Error(t, err1)
+		assert.Nil(t, result1)
+
+		// Проверка с пустым кодом
+		input2 := &notification.SendVerificationCodeIn{
+			Email: "test@example.com",
+			Code:  "",
+		}
+
+		result2, err2 := service.SendVerificationCode(ctx, input2)
+
+		assert.Error(t, err2)
+		assert.Nil(t, result2)
 	})
 }

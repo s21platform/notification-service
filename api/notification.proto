@@ -11,6 +11,8 @@ service NotificationService {
   rpc GetNotification (NotificationIn) returns (NotificationOut) {}
   // Метод отметки уведомления как прочитанного
   rpc MarkNotificationsAsRead (MarkNotificationsAsReadIn) returns (google.protobuf.Empty) {}
+  // Метод для отправки кода регистрации
+  rpc SendVerificationCode (SendVerificationCodeIn) returns (google.protobuf.Empty) {};
 }
 
 // Выходное сообщение для метода GetNotificationCount
@@ -47,6 +49,13 @@ message NotificationOut {
 message MarkNotificationsAsReadIn {
   // ID уведомлений
   repeated int64 notification_ids = 1;
+}
+
+message SendVerificationCodeIn {
+  // Email адресата
+  string email = 1;
+  // Отправляемый код
+  string code = 2;
 }
 
 // == kafka Event ==

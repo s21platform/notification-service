@@ -10,6 +10,7 @@
     - [NotificationCountOut](#-NotificationCountOut)
     - [NotificationIn](#-NotificationIn)
     - [NotificationOut](#-NotificationOut)
+    - [SendVerificationCodeIn](#-SendVerificationCodeIn)
   
     - [NotificationService](#-NotificationService)
   
@@ -117,6 +118,22 @@
 
 
 
+
+<a name="-SendVerificationCodeIn"></a>
+
+### SendVerificationCodeIn
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| email | [string](#string) |  | Email адресата |
+| code | [string](#string) |  | Отправляемый код |
+
+
+
+
+
  
 
  
@@ -134,6 +151,7 @@
 | GetNotificationCount | [.google.protobuf.Empty](#google-protobuf-Empty) | [.NotificationCountOut](#NotificationCountOut) | Метод получения количества непрочитанных уведомлений |
 | GetNotification | [.NotificationIn](#NotificationIn) | [.NotificationOut](#NotificationOut) | Метод получения уведомлений по limit и offset |
 | MarkNotificationsAsRead | [.MarkNotificationsAsReadIn](#MarkNotificationsAsReadIn) | [.google.protobuf.Empty](#google-protobuf-Empty) | Метод отметки уведомления как прочитанного |
+| SendVerificationCode | [.SendVerificationCodeIn](#SendVerificationCodeIn) | [.google.protobuf.Empty](#google-protobuf-Empty) | Метод для отправки кода регистрации |
 
  
 

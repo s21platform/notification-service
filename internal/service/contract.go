@@ -12,3 +12,11 @@ type DbRepo interface {
 	GetNotifications(ctx context.Context, userUuid string, limit int64, offset int64) ([]model.Notification, error)
 	MarkNotificationsAsRead(ctx context.Context, userUuid string, notificationId []int64) error
 }
+
+type EmailSender interface {
+	SendEmail(subject string, to string, content string) error
+}
+
+type VerificationCodeSender interface {
+	SendVerificationCode(email string, code string) error
+}

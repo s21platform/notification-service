@@ -19,12 +19,16 @@ var ErrNotificationNotFound = errors.New("notification not found or already read
 
 type Service struct {
 	notification.UnimplementedNotificationServiceServer
-	dbR DbRepo
+	dbR           DbRepo
+	emailS        EmailSender
+	verificationS VerificationCodeSender
 }
 
-func New(repo DbRepo) *Service {
+func New(repo DbRepo, emailSender EmailSender, verificationSender VerificationCodeSender) *Service {
 	return &Service{
-		dbR: repo,
+		dbR:           repo,
+		emailS:        emailSender,
+		verificationS: verificationSender,
 	}
 }
 
@@ -70,5 +74,28 @@ func (s *Service) MarkNotificationsAsRead(ctx context.Context, in *notification.
 		}
 		return nil, status.Error(codes.Internal, fmt.Sprintf("Internal Error: %v", err))
 	}
+	return &emptypb.Empty{}, nil
+}
+
+func (s *Service) SendVerificationCode(ctx context.Context, in *notification.SendVerificationCodeIn) (*emptypb.Empty, error) {
+	log.Println("SendVerificationCode")
+
+	email := in.GetEmail()
+	code := in.GetCode()
+
+	log.Println("email", email)
+	log.Println("code", code)
+
+	if email == "" || code == "" {
+		return nil, status.Error(codes.InvalidArgument, "email and code are required")
+	}
+
+	// Используем специализированный сервис для отправки верификационного кода
+	if err := s.verificationS.SendVerificationCode(email, code); err != nil {
+		log.Printf("failed to send verification code: %v", err)
+		return nil, status.Error(codes.Internal, fmt.Sprintf("Internal Error: %v", err))
+	}
+
+	log.Printf("verification code sent to %s", email)
 	return &emptypb.Empty{}, nil
 }
