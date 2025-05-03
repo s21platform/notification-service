@@ -20,7 +20,7 @@ spec:
   providesApis:
     - GetNotificationCount-v0
     - GetNotification-v0
-    - MarkNotificationAsRead-v0
+    - MarkNotificationsAsRead-v0
   consumesApis:
     - GetLoginByUUID-v0
     
@@ -84,7 +84,7 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
-  name: MarkNotificationAsRead-v0
+  name: MarkNotificationsAsRead-v0
   description: Отметка уведомления как прочитанного
   annotations:
     github.com/project-slug: s21platform/notification-service
@@ -95,9 +95,9 @@ spec:
   lifecycle: production
   owner: notification-service-team
   definition: |
-    rpc MarkNotificationAsRead (MarkNotificationAsReadIn) returns (google.protobuf.Empty){};
+    rpc MarkNotificationsAsRead (MarkNotificationsAsReadIn) returns (google.protobuf.Empty){};
     
-    message MarkNotificationAsReadIn {
+    message MarkNotificationsAsReadIn {
       int64 notification_id = 1;
     }
 

@@ -60,10 +60,10 @@ func (s *Service) GetNotification(ctx context.Context, in *notification.Notifica
 	}, nil
 }
 
-func (s *Service) MarkNotificationAsRead(ctx context.Context, in *notification.MarkNotificationAsReadIn) (*emptypb.Empty, error) {
+func (s *Service) MarkNotificationsAsRead(ctx context.Context, in *notification.MarkNotificationsAsReadIn) (*emptypb.Empty, error) {
 	log.Println("MarkNotificationAsRead")
 	userUuid := ctx.Value(config.KeyUUID).(string)
-	err := s.dbR.MarkNotificationAsRead(ctx, userUuid, in.NotificationId)
+	err := s.dbR.MarkNotificationsAsRead(ctx, userUuid, in.NotificationIds)
 	if err != nil {
 		if err.Error() == "notification not found or already read" {
 			return nil, status.Error(codes.NotFound, err.Error())
