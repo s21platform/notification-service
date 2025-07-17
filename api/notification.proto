@@ -13,6 +13,8 @@ service NotificationService {
   rpc MarkNotificationsAsRead (MarkNotificationsAsReadIn) returns (google.protobuf.Empty) {}
   // Метод для отправки кода регистрации
   rpc SendVerificationCode (SendVerificationCodeIn) returns (google.protobuf.Empty) {};
+  // Метод для отправки кода для линковки школьного профиля к платформенному
+  rpc SendEduCode (SendEduCodeIn) returns (google.protobuf.Empty) {};
 }
 
 // Выходное сообщение для метода GetNotificationCount
@@ -52,6 +54,13 @@ message MarkNotificationsAsReadIn {
 }
 
 message SendVerificationCodeIn {
+  // Email адресата
+  string email = 1;
+  // Отправляемый код
+  string code = 2;
+}
+
+message SendEduCodeIn {
   // Email адресата
   string email = 1;
   // Отправляемый код
