@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -22,13 +23,15 @@ type Service struct {
 	dbR           DbRepo
 	emailS        EmailSender
 	verificationS VerificationCodeSender
+	vecS          VerificationEduCodeSender
 }
 
-func New(repo DbRepo, emailSender EmailSender, verificationSender VerificationCodeSender) *Service {
+func New(repo DbRepo, emailSender EmailSender, verificationSender VerificationCodeSender, vecS VerificationEduCodeSender) *Service {
 	return &Service{
 		dbR:           repo,
 		emailS:        emailSender,
 		verificationS: verificationSender,
+		vecS:          vecS,
 	}
 }
 
@@ -97,5 +100,25 @@ func (s *Service) SendVerificationCode(ctx context.Context, in *notification.Sen
 	}
 
 	log.Printf("verification code sent to %s", email)
+	return &emptypb.Empty{}, nil
+}
+
+func (s *Service) SendEduCode(ctx context.Context, in *notification.SendEduCodeIn) (*emptypb.Empty, error) {
+	log.Println("SendEduCode")
+
+	if in.Email == "" || in.Code == "" {
+		return nil, status.Error(codes.InvalidArgument, "email and code are required")
+	}
+
+	if !strings.Contains(in.Email, "@student.21-school.ru") {
+		return nil, status.Error(codes.InvalidArgument, "invalid email")
+	}
+
+	err := s.vecS.SendVerificationCode(in.Email, in.Code)
+	if err != nil {
+		log.Printf("failed to send verification edu code: %v", err)
+		return nil, status.Error(codes.Internal, fmt.Sprintf("Internal Error: %v", err))
+	}
+	log.Printf("verification edu code sent to %s", in.Email)
 	return &emptypb.Empty{}, nil
 }

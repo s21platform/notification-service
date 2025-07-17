@@ -24,6 +24,7 @@ const (
 	NotificationService_GetNotification_FullMethodName         = "/NotificationService/GetNotification"
 	NotificationService_MarkNotificationsAsRead_FullMethodName = "/NotificationService/MarkNotificationsAsRead"
 	NotificationService_SendVerificationCode_FullMethodName    = "/NotificationService/SendVerificationCode"
+	NotificationService_SendEduCode_FullMethodName             = "/NotificationService/SendEduCode"
 )
 
 // NotificationServiceClient is the client API for NotificationService service.
@@ -38,6 +39,8 @@ type NotificationServiceClient interface {
 	MarkNotificationsAsRead(ctx context.Context, in *MarkNotificationsAsReadIn, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Метод для отправки кода регистрации
 	SendVerificationCode(ctx context.Context, in *SendVerificationCodeIn, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Метод для отправки кода для линковки школьного профиля к платформенному
+	SendEduCode(ctx context.Context, in *SendEduCodeIn, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type notificationServiceClient struct {
@@ -88,6 +91,16 @@ func (c *notificationServiceClient) SendVerificationCode(ctx context.Context, in
 	return out, nil
 }
 
+func (c *notificationServiceClient) SendEduCode(ctx context.Context, in *SendEduCodeIn, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, NotificationService_SendEduCode_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NotificationServiceServer is the server API for NotificationService service.
 // All implementations must embed UnimplementedNotificationServiceServer
 // for forward compatibility.
@@ -100,6 +113,8 @@ type NotificationServiceServer interface {
 	MarkNotificationsAsRead(context.Context, *MarkNotificationsAsReadIn) (*emptypb.Empty, error)
 	// Метод для отправки кода регистрации
 	SendVerificationCode(context.Context, *SendVerificationCodeIn) (*emptypb.Empty, error)
+	// Метод для отправки кода для линковки школьного профиля к платформенному
+	SendEduCode(context.Context, *SendEduCodeIn) (*emptypb.Empty, error)
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -121,6 +136,9 @@ func (UnimplementedNotificationServiceServer) MarkNotificationsAsRead(context.Co
 }
 func (UnimplementedNotificationServiceServer) SendVerificationCode(context.Context, *SendVerificationCodeIn) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendVerificationCode not implemented")
+}
+func (UnimplementedNotificationServiceServer) SendEduCode(context.Context, *SendEduCodeIn) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendEduCode not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}
 func (UnimplementedNotificationServiceServer) testEmbeddedByValue()                             {}
@@ -215,6 +233,24 @@ func _NotificationService_SendVerificationCode_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NotificationService_SendEduCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendEduCodeIn)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotificationServiceServer).SendEduCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NotificationService_SendEduCode_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotificationServiceServer).SendEduCode(ctx, req.(*SendEduCodeIn))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NotificationService_ServiceDesc is the grpc.ServiceDesc for NotificationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -237,6 +273,10 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendVerificationCode",
 			Handler:    _NotificationService_SendVerificationCode_Handler,
+		},
+		{
+			MethodName: "SendEduCode",
+			Handler:    _NotificationService_SendEduCode_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

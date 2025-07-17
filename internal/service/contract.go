@@ -20,3 +20,7 @@ type EmailSender interface {
 type VerificationCodeSender interface {
 	SendVerificationCode(email string, code string) error
 }
+
+type VerificationEduCodeSender interface {
+	SendVerificationCode(email string, code string) error
+}

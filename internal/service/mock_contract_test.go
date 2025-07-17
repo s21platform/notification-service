@@ -115,3 +115,77 @@ func (mr *MockEmailSenderMockRecorder) SendEmail(subject, to, content interface{
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendEmail", reflect.TypeOf((*MockEmailSender)(nil).SendEmail), subject, to, content)
 }
+
+// MockVerificationCodeSender is a mock of VerificationCodeSender interface.
+type MockVerificationCodeSender struct {
+	ctrl     *gomock.Controller
+	recorder *MockVerificationCodeSenderMockRecorder
+}
+
+// MockVerificationCodeSenderMockRecorder is the mock recorder for MockVerificationCodeSender.
+type MockVerificationCodeSenderMockRecorder struct {
+	mock *MockVerificationCodeSender
+}
+
+// NewMockVerificationCodeSender creates a new mock instance.
+func NewMockVerificationCodeSender(ctrl *gomock.Controller) *MockVerificationCodeSender {
+	mock := &MockVerificationCodeSender{ctrl: ctrl}
+	mock.recorder = &MockVerificationCodeSenderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockVerificationCodeSender) EXPECT() *MockVerificationCodeSenderMockRecorder {
+	return m.recorder
+}
+
+// SendVerificationCode mocks base method.
+func (m *MockVerificationCodeSender) SendVerificationCode(email, code string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendVerificationCode", email, code)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SendVerificationCode indicates an expected call of SendVerificationCode.
+func (mr *MockVerificationCodeSenderMockRecorder) SendVerificationCode(email, code interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendVerificationCode", reflect.TypeOf((*MockVerificationCodeSender)(nil).SendVerificationCode), email, code)
+}
+
+// MockVerificationEduCodeSender is a mock of VerificationEduCodeSender interface.
+type MockVerificationEduCodeSender struct {
+	ctrl     *gomock.Controller
+	recorder *MockVerificationEduCodeSenderMockRecorder
+}
+
+// MockVerificationEduCodeSenderMockRecorder is the mock recorder for MockVerificationEduCodeSender.
+type MockVerificationEduCodeSenderMockRecorder struct {
+	mock *MockVerificationEduCodeSender
+}
+
+// NewMockVerificationEduCodeSender creates a new mock instance.
+func NewMockVerificationEduCodeSender(ctrl *gomock.Controller) *MockVerificationEduCodeSender {
+	mock := &MockVerificationEduCodeSender{ctrl: ctrl}
+	mock.recorder = &MockVerificationEduCodeSenderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockVerificationEduCodeSender) EXPECT() *MockVerificationEduCodeSenderMockRecorder {
+	return m.recorder
+}
+
+// SendVerificationCode mocks base method.
+func (m *MockVerificationEduCodeSender) SendVerificationCode(email, code string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendVerificationCode", email, code)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SendVerificationCode indicates an expected call of SendVerificationCode.
+func (mr *MockVerificationEduCodeSenderMockRecorder) SendVerificationCode(email, code interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendVerificationCode", reflect.TypeOf((*MockVerificationEduCodeSender)(nil).SendVerificationCode), email, code)
+}

@@ -33,9 +33,10 @@ func TestService_GetNotificationCount(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockRepo := NewMockDbRepo(ctrl)
+	mockVEC := NewMockVerificationEduCodeSender(ctrl)
 	mockEmail := &mockEmailSender{}
 	mockVerification := &mockVerificationCodeSender{}
-	service := New(mockRepo, mockEmail, mockVerification)
+	service := New(mockRepo, mockEmail, mockVerification, mockVEC)
 	ctx := context.WithValue(context.Background(), config.KeyUUID, "test-user-uuid")
 
 	t.Run("success", func(t *testing.T) {
@@ -63,9 +64,10 @@ func TestService_GetNotification(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockRepo := NewMockDbRepo(ctrl)
+	mockVEC := NewMockVerificationEduCodeSender(ctrl)
 	mockEmail := &mockEmailSender{}
 	mockVerification := &mockVerificationCodeSender{}
-	service := New(mockRepo, mockEmail, mockVerification)
+	service := New(mockRepo, mockEmail, mockVerification, mockVEC)
 	ctx := context.WithValue(context.Background(), config.KeyUUID, "test-user-uuid")
 
 	now := time.Now()
@@ -134,9 +136,10 @@ func TestService_MarkNotificationAsRead(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockRepo := NewMockDbRepo(ctrl)
+	mockVEC := NewMockVerificationEduCodeSender(ctrl)
 	mockEmail := &mockEmailSender{}
 	mockVerification := &mockVerificationCodeSender{}
-	service := New(mockRepo, mockEmail, mockVerification)
+	service := New(mockRepo, mockEmail, mockVerification, mockVEC)
 	ctx := context.WithValue(context.Background(), config.KeyUUID, "test-user-uuid")
 
 	t.Run("success", func(t *testing.T) {
@@ -173,9 +176,10 @@ func TestService_SendVerificationCode(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockRepo := NewMockDbRepo(ctrl)
+	mockVEC := NewMockVerificationEduCodeSender(ctrl)
 	mockEmail := &mockEmailSender{}
 	mockVerification := &mockVerificationCodeSender{}
-	service := New(mockRepo, mockEmail, mockVerification)
+	service := New(mockRepo, mockEmail, mockVerification, mockVEC)
 	ctx := context.Background()
 
 	t.Run("success", func(t *testing.T) {

@@ -10,6 +10,7 @@
     - [NotificationCountOut](#-NotificationCountOut)
     - [NotificationIn](#-NotificationIn)
     - [NotificationOut](#-NotificationOut)
+    - [SendEduCodeIn](#-SendEduCodeIn)
     - [SendVerificationCodeIn](#-SendVerificationCodeIn)
   
     - [NotificationService](#-NotificationService)
@@ -119,6 +120,22 @@
 
 
 
+<a name="-SendEduCodeIn"></a>
+
+### SendEduCodeIn
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| email | [string](#string) |  | Email адресата |
+| code | [string](#string) |  | Отправляемый код |
+
+
+
+
+
+
 <a name="-SendVerificationCodeIn"></a>
 
 ### SendVerificationCodeIn
@@ -152,6 +169,7 @@
 | GetNotification | [.NotificationIn](#NotificationIn) | [.NotificationOut](#NotificationOut) | Метод получения уведомлений по limit и offset |
 | MarkNotificationsAsRead | [.MarkNotificationsAsReadIn](#MarkNotificationsAsReadIn) | [.google.protobuf.Empty](#google-protobuf-Empty) | Метод отметки уведомления как прочитанного |
 | SendVerificationCode | [.SendVerificationCodeIn](#SendVerificationCodeIn) | [.google.protobuf.Empty](#google-protobuf-Empty) | Метод для отправки кода регистрации |
+| SendEduCode | [.SendEduCodeIn](#SendEduCodeIn) | [.google.protobuf.Empty](#google-protobuf-Empty) | Метод для отправки кода для линковки школьного профиля к платформенному |
 
  
 
