@@ -11,6 +11,8 @@ import (
 
 	"github.com/s21platform/notification-service/internal/config"
 	"github.com/s21platform/notification-service/internal/infra"
+	"github.com/s21platform/notification-service/internal/pkg/email_sender"
+	"github.com/s21platform/notification-service/internal/pkg/email_sender/verification_code"
 	"github.com/s21platform/notification-service/internal/repository/postgres"
 	"github.com/s21platform/notification-service/internal/service"
 )
@@ -20,7 +22,13 @@ func main() {
 	db := postgres.New(cfg)
 	defer db.Close()
 
-	server := service.New(db)
+	// Инициализируем email сервис
+	emailSender := email_sender.New(cfg)
+
+	// Инициализируем сервис верификационных кодов
+	verificationCodeSender := verification_code.New(cfg)
+
+	server := service.New(db, emailSender, verificationCodeSender)
 
 	s := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
